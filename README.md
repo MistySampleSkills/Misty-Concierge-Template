@@ -29,6 +29,7 @@ This guide provides all of the information you need to set up your Dialogflow ag
   - [Using the conciergeBaseTemplate Skill](#using-the-conciergebasetemplate-skill)
     - [Customizing the conciergeBaseTemplate Code](#customizing-the-conciergebasetemplate-code)
   - [Remarks](#remarks)
+    - [Decreasing Latency with audioOutput from Dialogflow](#decreasing-latency-with-audiooutput-from-dialogflow)
   - [Contribution Guidelines](#contribution-guidelines)
 
 ## Overview
@@ -307,9 +308,40 @@ When you're ready to run the skill, [generate a meta file](#generating-the-meta-
 
 ## Remarks
 
-In these templates, we have Misty speak out loud by sending the response from Dialogflow (or the parsed response from Foursquare) to Google's text-to-speech API. It's worth noting that each Dialogflow response can include audio output of the response phrase, so that Misty can save and play back the Dialogflow response without sending an additional request to the text-to-speech service. Examples of how to do this are included in each template. Uncomment lines 405 - 413 in the `conciergeFoursquareTemplate`, or 352 - 355 in the `conciergeBaseTemplate`, and comment out calls on the `speakTheText()` method that simply send the response from Dialogflow to Google's text-to-speech service. This can decrease latency when you just need Misty to read the default response from Dialogflow.
+### Decreasing Latency with audioOutput from Dialogflow
 
-**Note:** This doesn't work with the response from Foursquare, because that response does not include base64-encoded audio output..
+In these templates, we have Misty speak out loud by sending the response from Dialogflow (or the parsed response from Foursquare) to Google's text-to-speech API. It's worth noting that each Dialogflow response can include audio output of the response phrase, so that Misty can save and play back the Dialogflow response without sending an additional request to the text-to-speech service. Each template includes an example of how to do this.
+
+Uncomment lines 405 - 413 in the `conciergeFoursquareTemplate`, or 352 - 355 in the `conciergeBaseTemplate`, and comment out calls on the `speakTheText()` method that simply send the response from Dialogflow to Google's text-to-speech service. This can decrease latency when you just need Misty to read the default response from Dialogflow.
+
+***Note:** This doesn't work with the response from Foursquare, because that response does not include base64-encoded audio output.*
+
+You can configure the settings for the audio output that Dialogflow returns by changing the values for the [`outputAudioConfig`](https://cloud.google.com/dialogflow/docs/reference/rest/v2beta1/OutputAudioConfig) object in the body of your Dialogflow request. In the `conciergeFoursquareTemplate`, these arguments are defined on line 337:
+
+```js
+    var arguments = JSON.stringify({
+        "queryInput": {
+            "audioConfig": {
+                "audioEncoding": "AUDIO_ENCODING_LINEAR_16",
+                "languageCode": "en-US"
+            }
+        },
+        "inputAudio": base64,
+        "outputAudioConfig": {
+            "audioEncoding": "OUTPUT_AUDIO_ENCODING_LINEAR_16",
+            "synthesizeSpeechConfig": {
+                "speakingRate": 0.95,
+                "pitch": 0,
+                "volumeGainDb": 0,
+                "effectsProfileId": ["handset-class-device"],
+                "voice": {
+                    'name': "en-US-Wavenet-F"
+                }
+            }
+        }
+    });
+```
+
 
 ## Contribution Guidelines
 
