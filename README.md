@@ -29,7 +29,7 @@ This guide provides all of the information you need to set up your Dialogflow ag
   - [Using the conciergeBaseTemplate Skill](#using-the-conciergebasetemplate-skill)
     - [Customizing the conciergeBaseTemplate Code](#customizing-the-conciergebasetemplate-code)
   - [Remarks](#remarks)
-    - [Decreasing Latency with audioOutput from Dialogflow](#decreasing-latency-with-audiooutput-from-dialogflow)
+    - [Using Dialogflow Audio Output to Decrease Latency](#using-dialogflow-audio-output-to-decrease-latency)
   - [Contribution Guidelines](#contribution-guidelines)
 
 ## Overview
@@ -308,7 +308,7 @@ When you're ready to run the skill, [generate a meta file](#generating-the-meta-
 
 ## Remarks
 
-### Decreasing Latency with audioOutput from Dialogflow
+### Using Dialogflow Audio Output to Decrease Latency
 
 In these templates, we have Misty speak out loud by sending the response from Dialogflow (or the parsed response from Foursquare) to Google's text-to-speech API. It's worth noting that each Dialogflow response can include audio output of the response phrase, so that Misty can save and play back the Dialogflow response without sending an additional request to the text-to-speech service. Each template includes an example of how to do this.
 
