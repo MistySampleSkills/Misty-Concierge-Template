@@ -2,7 +2,7 @@
 
 The **Misty Concierge Template** is an open-source JavaScript skill template for Misty II robots. As a Misty developer, you can use this template to quickly build and deploy skills that put Misty to work as a concierge for your business.
 
-The JavaScript skill templates in this repository integrate with [Dialogflow](https://dialogflow.com/) and the [Foursquare Places API](https://developer.foursquare.com/docs/api) to give Misty the ability to answer questions about nearby food, services, and places. As she listens and responds, Misty moves her head and arms, blinks her LED, plays sounds, and changes her expression to invite engagement and create an interesting experience for the people who speak to her.
+The JavaScript skill templates in this repository integrate with [Dialogflow](https://dialogflow.com/) and the [Foursquare Places API](https://developer.foursquare.com/docs/api) to give Misty the ability to answer questions about nearby food, services, and places. As she listens and responds, Misty moves her head and arms, blinks her LED, plays sounds, and changes her expression to invite engagement and delight those who speak to her.
 
 ## Table of Contents
 
