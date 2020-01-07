@@ -1,0 +1,19 @@
+{
+  "Name": "conciergeFourSquareTemplate",
+  "UniqueId": "500c5e92-2d9c-49a8-85b9-175a44ce5349",
+  "Description": "My skill is amazing!",
+  "StartupRules": [
+    "Manual",
+    "Robot"
+  ],
+  "Language": "javascript",
+  "BroadcastMode": "debug",
+  "TimeoutInSeconds": 36000,
+  "CleanupOnCancel": false,
+  "WriteToLog": false,
+  "Parameters": {
+    "int": 10,
+    "double": 20.5,
+    "string": "twenty"
+  }
+}
