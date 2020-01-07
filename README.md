@@ -23,7 +23,7 @@ This guide provides all of the information you need to set up your Dialogflow ag
   - [Setting Up Foursquare](#setting-up-foursquare)
   - [Using the conciergeFoursquareTemplate Skill](#using-the-conciergefoursquaretemplate-skill)
     - [Updating the Skill Code](#updating-the-skill-code)
-    - [Generating the Meta File](#generating-the-meta-file)
+    - [Using the Meta File](#using-the-meta-file)
     - [Installing the Skill](#installing-the-skill)
     - [Customizing the conciergeFoursquareTemplate Code](#customizing-the-conciergefoursquaretemplate-code)
   - [Using the conciergeBaseTemplate Skill](#using-the-conciergebasetemplate-skill)
@@ -248,18 +248,9 @@ Update this code as follows:
 7. **Optional**: Modify the value for `numberOfResults` to change how many recommendations Misty gets from the Places API. 
 8. Save your changes.
 
-### Generating the Meta File
+### Using the Meta File
 
-Next we create the JSON meta file for the skill. This file configures some of the initial settings and parameters that determine how Misty runs the skill code.
-
-Follow these steps to generate a unique JSON file for your concierge skill:
-
-1. Open the [Skill Runner](http://sdk.mistyrobotics.com/skill-runner/) web page in a new browser window.
-2. In the **Generate** section, enter `conciergeFoursquareTemplate` in the **New Skill Name** field. ***Note:** The meta file must have the same name as your skill code file. If you change the name of your JavaScript code file, make sure to use your custom name to generate the meta file.*
-3. Select the option to **Download** and click **Generate JSON Meta Template**.
-4. Locate the downloaded `conciergeFoursquareTemplate.json` file, and save it to the same directory as the `conciergeFoursquareTemplate.js` code file.
-
-***Note:** For information about the key/value pairs defined in the meta file, see the [Meta File documentation](https://docs.mistyrobotics.com/misty-ii/javascript-sdk/javascript-skill-architecture/#meta-file).*
+In addition to your code file, each JavaScript skill you upload to Misty requires a JSON meta file that configures some of the initial settings and parameters that determine how Misty runs the skill code. Each template in this repository includes a pre-made meta file, so there's no need to generate your own unless you'd like a meta file that's associated with a unique GUID. For information about the key/value pairs defined in the meta file, see the [Meta File documentation](https://docs.mistyrobotics.com/misty-ii/javascript-sdk/javascript-skill-architecture/#meta-file).
 
 ### Installing the Skill
 
