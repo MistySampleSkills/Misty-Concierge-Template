@@ -85,7 +85,7 @@ The pre-configured entities include `food`, `services`, and `places`.
 
 If you select an entity, you can see all of the *reference values* and *synonyms* associated with that entity. When the Dialogflow agent identifies a reference value (or one of its synonyms) in a user expression, it extracts that value and returns it to your application as a *parameter* of a given intent. You can customize your agent by adding reference values to the existing entities, or by creating new entities of your own. 
 
-For example, our `food` entity includes reference values like `burger`, with synonyms like *cheese burger* and *hamburger*.
+For example, the `food` entity includes reference values like `burger`, with synonyms like *cheese burger* and *hamburger*.
 
 ![Food entity](./img/entities-2.png)
 
@@ -93,13 +93,13 @@ For example, our `food` entity includes reference values like `burger`, with syn
 
 ### Intents
 
-Next, let's look at the pre-configured intents. Our agent has two custom intents: `aroundMe` and `name`.
+Next, let's look at the pre-configured intents. This agent includes the custom intents `aroundMe` and `name`.
 
 ![Intents overview](./img/intents-1.png)
 
 #### name Intent
 
-The `name` intent handles questions about Misty's name. It includes a handful of *training phrases* (for example, "What's your name?" and "What are you called?"), as well as a *response* ("My name is Misty!"). When the agent associates a user expression with this intent, it returns this response to our skill and Misty speaks this text string out loud.
+The `name` intent handles questions about Misty's name. It includes a handful of *training phrases* (for example, "What's your name?" and "What are you called?"), as well as a *response* ("My name is Misty!"). When the agent associates a user expression with this intent, it returns this response to the skill and Misty speaks this text string out loud.
 
 ![name Training Phrases](./img/intents-2.png)
 
@@ -121,7 +121,7 @@ We define parameters (and the entities with which they are associated) in the **
 
 ***Note:** See the Dialogflow documentation for [more on annotating training phrases](https://cloud.google.com/dialogflow/docs/intents-training-phrases).*
 
-With the Dialogflow agent set up, we're ready to create a cloud function for generating our unique Access Token.
+With the Dialogflow agent set up, we're ready to create a cloud function for generating the unique Access Token.
 
 ### Creating an Access Token Function
 
@@ -202,13 +202,13 @@ In this template, Misty gets a list of places by sending a request to the [Get V
 3. Give your app a name and a URL. These can be anything you like. Click **Next.** <br> ![Name your app](./img/foursquare-2.png)
 4. Copy the **CLIENT ID** and **CLIENT SECRET** to a separate note. We use these strings to update the `conciergeFoursquareTemplate` skill code. <br> ![Foursquare credentials](./img/foursquare-3.png)
 
-Okay! We have our Foursquare keys, and each service is configured to work with the templates in this repo. Now we can update our skill code, generate a meta file, and install the skill on Misty!
+Okay! We have the Foursquare keys, and each service is configured to work with the templates in this repo. Now we can update the skill code, generate a meta file, and install the skill on Misty!
 
 ## Using the conciergeFoursquareTemplate Skill
 
 The `conciergeFoursquareTemplate.js` file in this repo contains the JavaScript code for running the concierge skill. The logic for Misty's behavior is predefined in this template, and includes:
 
-* On hearing the "Hey, Misty" wake word, Misty captures a speech recording and sends it to our Dialogflow agent.
+* On hearing the "Hey, Misty" wake word, Misty captures a speech recording and sends it to the Dialogflow agent.
 * Dialogflow parses the expression and returns the intent and parameters of the request.
 * Misty parses the response data and sends another request to the **Get Venue Recommendations** operation in the Foursquare Places API.
 * Misty converts the recommendations in the response from the Places API to a human-understandable text string, which she then reads aloud via with Google's text-to-speech service.
@@ -342,7 +342,8 @@ Want to help this project grow? The Misty community would love your contribution
 * [Dialogflow docs](https://cloud.google.com/dialogflow/docs/)
 * [Foursquare Places API docs](https://developer.foursquare.com/docs/api)
 
-New to contributing to open source? Here's how you can get started with our project.
+New to contributing to open source? Here's how you can get started with this
+project.
 
 * [Fork this repository](https://guides.github.com/activities/forking/).
 * Clone the forked repo to your local machine: `git clone https://github.com/<github-username>/misty-concierge-template.git`
