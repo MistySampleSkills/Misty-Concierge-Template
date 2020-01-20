@@ -99,7 +99,7 @@ Next, let's look at the pre-configured intents. This agent includes the custom i
 
 #### name Intent
 
-The `name` intent handles questions about Misty's name. It includes a handful of *training phrases* (for example, "What's your name?" and "What are you called?"), as well as a *response* ("My name is Misty!"). When the agent associates a user expression with this intent, it returns this response to the skill and Misty speaks this text string out loud.
+The `name` intent handles questions about Misty's name. It includes a handful of *training phrases* (for example, "What's your name?" and "What are you called?"), as well as a *response* ("My name is Misty!"). When the agent associates a user expression with this intent, it returns this response to the skill and Misty speaks this text out loud.
 
 ![name Training Phrases](./img/intents-2.png)
 
