@@ -53,7 +53,7 @@ The Misty-Concierge-Template repository includes the following resources:
 * **conciergeFoursquareTemplate** - An extension of the base template that shows how Misty can suggest nearby food, places, and services by using Dialogflow response data to make a request to the Foursquare Places API. Use this template as an example of how to use third-party services with your concierge skills.
 * **dialogflow** - Includes a .zip file with JSON data for predefined intents and entities that you can import into a Dialogflow agent. (For use with the `conciergeFoursquareTemplate` skill).
 
-This guide provides instructions for using the code for the `conciergeBaseTemplate` and the `conciergeFoursquareTemplate` with your Misty II. If this is your first time using the template, we recommend starting with the base template to learn how Dialogflow works with your skill code. If you've already got the template up-and-running, feel free to skip ahead to the Foursquare template tutorial.
+This guide provides instructions for using the code for the `conciergeBaseTemplate` and the `conciergeFoursquareTemplate` with your Misty II. If this is your first time using the template, we recommend starting with the base template to learn how Dialogflow works with your skill code. If you've already got the base template up-and-running, feel free to skip ahead to the Foursquare template tutorial.
 
 ### Requirements
 
