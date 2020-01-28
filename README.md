@@ -39,7 +39,8 @@ This guide provides all of the information you need to start using the concierge
       - [Predefined Intents](#predefined-intents)
     - [Setting Up Foursquare](#setting-up-foursquare)
     - [Updating your Credentials](#updating-your-credentials-1)
-    - [Updating your Skill Code](#updating-your-skill-code-1)
+    - [Understanding the Skill Code](#understanding-the-skill-code)
+    - [Installing the Skill](#installing-the-skill)
   - [Remarks](#remarks)
     - [Using Dialogflow Audio Output to Decrease Latency](#using-dialogflow-audio-output-to-decrease-latency)
     - [Using the JSON Meta Files](#using-the-json-meta-files)
@@ -53,17 +54,17 @@ The Misty-Concierge-Template repository includes the following resources:
 * **conciergeFoursquareTemplate** - An extension of the base template that shows how Misty can suggest nearby food, places, and services by using Dialogflow response data to make a request to the Foursquare Places API. Use this template as an example of how to use third-party services with your concierge skills.
 * **dialogflow** - Includes a .zip file with JSON data for predefined intents and entities that you can import into a Dialogflow agent. (For use with the `conciergeFoursquareTemplate` skill).
 
-This guide provides instructions for using the code for the `conciergeBaseTemplate` and the `conciergeFoursquareTemplate` with your Misty II. If this is your first time using the template, we recommend starting with the base template to learn how Dialogflow works with your skill code. If you've already got the base template up-and-running, feel free to skip ahead to the Foursquare template tutorial.
+This guide provides instructions for using the code for the `conciergeBaseTemplate` and the `conciergeFoursquareTemplate` with your Misty II. If this is your first time using the template, we recommend starting with the base template to learn how Dialogflow works with your skill code. If you've already got the base template up-and-running, feel free to skip ahead to the Foursquare template guide.
 
 ### Requirements
 
-To use the templates in this repository, you need a Misty II robot running `robotVersion 1.8.4` or higher, with [2020.01.07 Android patch](https://community.mistyrobotics.com/t/2020-01-07-misty-ii-android-patch-for-improved-slam-performance/2415) applied.
+To use the templates in this repository, you need a Misty II robot running `robotVersion 1.8.4` or higher, with the [2020.01.07 Android patch](https://community.mistyrobotics.com/t/2020-01-07-misty-ii-android-patch-for-improved-slam-performance/2415) applied.
 
 ***Note:** Some of the commands and event types used in these templates are **beta**, and related hardware, firmware, and software is still under development. Please recognize that these skills may behave unpredictably at this time, and their range of capabilities is likely to change as Misty improves. If you have questions about getting started, or if you run in to issues with the contents of this repository, we encourage you to [post in the Misty Community Forums](https://community.mistyrobotics.com/t/application-template-misty-as-a-concierge/2414)!*
 
 ## conciergeBaseTemplate Guide
 
-When the `conciergeBaseTemplate` skill runs, you can activate Misty with her wake word ("Hey, Misty!") to start talking to the robot. Misty turns to face you and moves her head to maintain eye contact while you speak. When you finish talking, Misty captures your speech in an audio file and sends this recording to be analyzed by your own custom Dialogflow agent, which returns a data object you can use in your skill to program Misty's response to different questions and statements. In this guide we just have Misty speak the response text, but you can code the robot to respond however you'd like. Read this section to learn how to:
+When the `conciergeBaseTemplate` skill runs, you can activate Misty with her wake word ("Hey, Misty!") to start talking to the robot. Misty turns to face you and moves her head to maintain eye contact while you speak. When you finish talking, Misty captures your speech in an audio file and sends this recording to be analyzed by your own custom Dialogflow agent. Dialogflow returns a data object you can use in your skill to program Misty's response to different questions and statements. Read this section to learn how to:
 
 * create a Dialogflow agent with *intents* for handling a few basic types of questions that people might ask your robot
 * use Google Cloud Functions to automatically generate a token for use with Google's services each time the concierge skill runs
@@ -75,21 +76,21 @@ Start by forking, cloning, or downloading this repository to your local machine.
 
 ### Creating a Dialogflow Agent
 
-Dialogflow is a natural language processing service for building custom voice interactions, chatbots, and other conversational applications. We can use Dialogflow with the concierge template to create custom voice interactions that allow Misty to answer questions specific to our business or use case.
+Dialogflow is a natural language processing service for building custom voice interactions, chatbots, and other conversational applications. We can use Dialogflow with the concierge template to create custom voice interactions that allow Misty to answer questions specific to the product or service our business provides.
 
 Follow these steps to get started:
 
 1. [Create a Dialogflow account](https://dialogflow.com/) (this template uses the free, "Standard" edition of Dialogflow) and log in.
-2. Create a new [*agent*](https://cloud.google.com/dialogflow/docs/agents-overview) by clicking **Create Agent.** An agent is an entity you train to understand categories of expression (*intents*) and the possible meanings of words within those expressions (*entities*). <br> ![Create the agent](./img/create-agent-1.png)
+2. Create a new [*agent*](https://cloud.google.com/dialogflow/docs/agents-overview) by clicking **Create Agent.** An agent is an entity you train to understand categories of expression (*intents*) and the possible meanings of words within those expressions (*entities*).
 3. Give the agent a name and click **Create**. You can use any name you like. <br> ![Name the agent](./img/create-agent-2.png)
 
-With the agent created, we are ready to customize our intents.
+With the agent created, we are ready to create a few intents and entities for our skill!
 
 ### Custom Intents and Entities
 
-An [*intent*](https://cloud.google.com/dialogflow/docs/intents-overview) is a category of expression that your Dialogflow agent can identify and respond to. In your concierge skill, your Dialogflow agent maps user expressions to a given intent and returns the associated response to your skill. You use this response to determine what Misty should do next (like read the response text or ask a follow-up question)
+An [*intent*](https://cloud.google.com/dialogflow/docs/intents-overview) is a category of expression that your Dialogflow agent can identify and respond to. When Misty sends a recording to your Dialogflow agent, the agent attempts to map the recorded expression to a given intent and returns a data object with the associated response and other useful information to your skill. You use this response to determine what Misty should do next (like read the response text or ask a follow-up question).
 
-In this section, we create two custom intents. The first identifies questions about Misty's name, and the second identifies questions about what's for dinner. 
+In this section, we create two custom intents. The first identifies questions about Misty's name, and the second identifies questions about menu options for an imaginary restaurant. 
 
 #### "name" Intent
 
@@ -103,40 +104,39 @@ Follow these steps to create an intent that can identify questions about Misty's
 4. Define the [*responses*](https://cloud.google.com/dialogflow/docs/intents-responses) associated with this intent. The Dialogflow agent can return the text and a base64-encoded audio string for this response to your skill in a data object when it maps an expression to this intent. For this example, try, "I'm Misty the robot," "My name is Misty," and "Call me Misty the second." <br> ![Name intent responses](./img/name-responses.png)
 5. Click **Save.**
 
-When you click **Save**, Dialogflow trains the agent to recognize this intent. When that's done, you can test the interaction with the sandbox on the right-hand side of the console. Type "What's your name" where it says "Try it now," and see how the agent responds. You should see the text from one of the responses you defined along with the correct label for the intent.
+When you click **Save**, Dialogflow trains the agent to recognize this intent. When that's done, you can test the interaction with the sandbox on the right-hand side of the console. Type "What's your name" in the "Try it now" field, and see how the agent responds. If everything is working, the agent should return the text for one of the responses along with the name of the intent.
  
 #### "menu" Intent
 
 The next intent shows how you can extend the concierge template to give Misty the ability to to answer questions specific to the product or service your business provides. Imagine, for example, that Misty is working as a concierge in a hotel lobby. As clients of the hotel, we might expect the robot to answer questions about what is on the menu at the hotel restaurant.
 
-We can use another intent with a custom [*entity*](https://cloud.google.com/dialogflow/docs/entities-overview) to train our Dialogflow agent to identify questions about what is on the menu, and to extract information about which meal (breakfast, lunch, or dinner) the user wants information about. The agent returns this information to our skill, where we create a conditional block for answering the user's question. 
+We can use another intent with a custom [*entity*](https://cloud.google.com/dialogflow/docs/entities-overview) to train our Dialogflow agent to identify questions about what is on the menu, and to extract information about which meal (breakfast, lunch, or dinner) the user wants information about. The agent returns this information to our skill, where we can use a conditional block to code different responses for different meal types. 
 
-Follow the steps below to train the agent to identify questions about the restaurant is serving.
+Follow the steps below to train the agent to identify questions about what's on the menu:
 
 1. Select **Entities** from the left menu. Entities are objects that help your Dialogflow agent understand how to extract specific data from end-user expressions. (In addition to custom entities, Dialogflow provides several predefined system entities, which you can read about in the [Dialogflow developer documentation](https://cloud.google.com/dialogflow/docs/entities-overview).) <br> ![Entities](./img/entities.png)
 2. Click the **Create Entity** button to create a new custom entity. <br> ![Create Entity](./img/create-entity.png)
-3. Call the entity `meal`.
-4. Click the table to create three entries with the following reference values: `breakfast`, `lunch`, and `dinner`. You can also enter any syllables that your customers might use instead of these words (for example, `supper` or `evening meal`). <br> ![meal Entity](./img/meal-entity.png)
-5. Click **Save**.
+3. Call the entity `meal`, and create three new entries with the following reference values: `breakfast`, `lunch`, and `dinner`. You can also enter any syllables that your customers might use instead of these words (for example, `supper` or `evening meal`). <br> ![meal Entity](./img/meal-entity.png)
+4. Click **Save**.
 
-We can use the `meal` entity to create an intent can identify specifically which meal a customer wants information about. Follow these steps to do so: 
+We can use the `meal` entity to create an intent that can identify which meal a customer wants information about. Follow these steps to do so: 
 
 1. Click the **Create Intent** button to create a new intent.
 2. Call your intent `menu`.
 3. Train your agent with training phrases like "What's for dinner," "What's for breakfast," "What's for lunch," and "What's on the menu," as shown below: <br> ![menu Intent Training Phrases](./img/menu-intent-training-phrases.png)
 4.  Click **Save.** There is no need to define responses for this intent; we will create our responses in our skill code.
 
-Notice how Dialogflow automatically highlights the words that identify a type of meal (breakfast, lunch, and dinner) in our training phrases. If you click on the highlighted word, you can see that the agent automatically identifies these words as belonging to our custom `meal` entity. Because these words are annotated in our training phrase, the `meal` entity is automatically added to the **Actions and parameters** section. A *parameter* is an element of a user expression that is associated with a specific *entity* and that contains a variable, user-provided *value*.
+Notice how Dialogflow automatically highlights the words that identify a type of meal (breakfast, lunch, and dinner) in our training phrases. If you click on the highlighted word, you can see that the agent automatically identifies these words as belonging to our custom `meal` entity.
 
-Dialogflow returns the values for any parameters it identifies in user expressions with the response data it sends back to our skill. We can use that information to code unique responses to different types of questions.
+Because these words are annotated in our training phrase, the `meal` entity is automatically added to the **Actions and parameters** section. A *parameter* is an element of a user expression that is associated with a specific *entity* and that contains a variable, user-provided *value*. Dialogflow returns the values for any parameters it identifies in user expressions with the response data it sends back to our skill. We can use that information to code unique responses to different types of questions.
 
 ***Note:** The base template does not use the [*contexts*](https://cloud.google.com/dialogflow/docs/contexts-overview), [*events*](https://cloud.google.com/dialogflow/docs/events-overview), or [*fulfillment*](https://cloud.google.com/dialogflow/docs/fulfillment-overview) intent properties. You can use each of these properties in your own custom intents to develop powerful features that allow users to accomplish more by using voice interactions with Misty. Be sure to explore the [Dialogflow developer documentation](https://cloud.google.com/dialogflow/docs) to learn about these features in greater detail.*
 
-Now that we have configured a set of basic intents, we can move on to the next step: Creating an Access Token Function.
+Now that we have configured a set of basic intents, we can create the cloud function that generates Google Access Tokens for our skill.
 
 ### Creating an Access Token Function
 
-The templates in this repository need a unique Access Token to access your Dialogflow agent and Google's text-to-speech API. By default, a Google Access Token is only valid for about an hour. To prevent the need for updating your skill code with a new token each time you run a skill, we create a Google Cloud Function to return a new Access Token on demand. Each time the template skill runs, it sends a request to trigger this function, so we are always using fresh credentials. What's more, in cases where the skill runs for more than an hour, it sends periodic requests to refresh the token, so you don't lose access in the middle of a session.
+The templates in this repository need a unique Access Token to access your Dialogflow agent and Google's text-to-speech API. By default, a Google Access Token is only valid for about an hour. To prevent the need for updating your skill code with a new token each time you run a skill, we create a Google Cloud Function to return a new Access Token on demand. Each time the template skill runs, it sends a request to trigger this function, so we are always using fresh credentials. What's more, in cases where the skill runs for more than an hour, it sends periodic requests to refresh the token so that you don't lose access in the middle of a session.
 
 Follow these steps to set up the cloud function:
 
@@ -204,7 +204,7 @@ There you have it! The Dialogflow agent is set up, the cloud function is ready t
 
 Before we can use the `conciergeBaseTemplate` with our own Dialogflow agent, we must update the `conciergeBaseTemplate.js` skill code to use our unique *Project ID* and the *trigger URL* for our cloud function.
 
-Open the `conciergeBaseTemplate.js` file from your local copy of this repository in a text editor. You should see the `setCredentials`() function declared near the top of the skill file, as follows:
+Open the `conciergeBaseTemplate.js` file from your local copy of this repository in a text editor. You should see the `setCredentials()` function declared near the top of the skill file:
 
 ```js
 function setCredentials() 
@@ -230,11 +230,11 @@ The code in the `conciergeBaseTemplate.js` skill file is organized into three di
 
 * Code under the **FOLLOW FACE / LOOK AT PERSON** segment defines the behavior that allows Misty to localize to the person speaking and turn her head to look at the faces she detects.
 * Code under the **CONCIERGE** segment updates our access token, records user expressions, sends recordings to Dialogflow, and handles response data from our Dialogflow agent.
-* Code under the **TEXT TO SPEECH** segment defines the functions that use the Google text-to-speech service to have the robot speak her responses out loud.
+* Code under the **TEXT TO SPEECH** segment defines the functions that allow Misty to use Google's text-to-speech service to speak her responses out loud.
 
 To use the template with our custom Dialogflow agent, we only need to update the function that handles the response data from Dialogflow. This function gets the values for any intents and parameters that our agent identifies in a user expression, and it's where we write the conditional statements that determine how Misty responds.
 
-Locate the function declaration for the `_dialogueFlowResponse()` callback function (line 357). This callback runs when the skill receives a response from the Dialogflow agent. Look for the conditional block that handles different intents:
+Locate the function declaration for the `_dialogueFlowResponse()` callback function. This callback runs when the skill receives a response from the Dialogflow agent. Look for the conditional block that handles different intents:
 
 ```JavaScript
     if (intent == "YOUR_INTENT_NAME") 
@@ -256,7 +256,7 @@ Both of these conditional statements are already set up to extract the value of 
 For the `name` intent, reading the `fullfilmentText` is all we need. Update the first `if` statement to execute when `intent == "name"`. It should look like this:
 
 ```JS
-    if (intent == "YOUR_INTENT_NAME") 
+    if (intent == "name") 
     {
         misty.Set("textToSpeak", response.queryResult.fulfillmentText, false);
         speakTheText();
@@ -292,17 +292,18 @@ The `menu` intent requires a bit more configuration. Instead of extracting the v
 
 The final `else` statement in the conditional block handles instances where the intent does not match `name` or `menu`, or when the agent was not able to map the user expression to any existing intents.
 
-With the `_dialogueFlowResponse()` callback function modified, our skill code is ready to handle responses from our custom agent. Next step: installing the skill on your robot!
+With the `_dialogueFlowResponse()` callback function modified, our skill code is ready to handle responses from our custom agent. Next up: installing the skill on your robot!
 
 ### Installing your Skill
 
 Follow these steps to install the skill on Misty:
 
 1. Open the [Skill Runner](http://sdk.mistyrobotics.com/skill-runner/) web page and enter Misty’s IP address in the **Robot IP Address** field (located in the upper right hand corner). Click **Connect**.
-2. Make sure **JavaScript** is selected in the **Install** section. Then click **Choose files** and navigate to the directory with the `conciergeFoursquareTemplate` code and meta files. Select **both files** and click **Open**.
-3. When the upload is complete, the skill appears in the **Manage** section of the Skill Runner page. Find it and click **Start** to begin execution. 
+2. Make sure **JavaScript** is selected in the **Install** section. Then click **Choose files** and navigate to the directory with the `conciergeBaseTemplate.js` and `conciergeBaseTemplate.json` files. Select **both files** and click **Open**.
+3. When the upload is complete, the skill appears in the **Manage** section of the Skill Runner page. Find it and click **Start** to begin execution.
+4. When Misty's chest LED turns white, she's ready to talk. Say "Hey Misty" and ask your question after the beep!
 
-***Note:** The Skill Runner web page prints debug messages from running skills to your browser's web console. These messages can help you troubleshoot when things don't work as expected. Open the console with **Ctrl + Shift + J** (Windows/Linux) or **Cmd + Option + J** (Mac).*
+***Tip:** The Skill Runner web page prints debug messages from running skills to your browser's web console. These messages can help you troubleshoot when things don't work as expected. Open the console with **Ctrl + Shift + J** (Windows/Linux) or **Cmd + Option + J** (Mac).*
 
 ### Next Steps
 
@@ -318,13 +319,15 @@ The `conciergeFoursquareTemplate` is an extension of the base template that show
 * code Misty to use response data from Dialogflow in requests to other third-party services
 * update the `conciergeFoursquareTemplate.js` skill code with your own credentials and run the skill on your Misty II
 
-If you haven't done so already, start by forking, cloning, or downloading this repository to your local machine. Once you have a copy of the template files to work with, read the next section to learn how to set up the conciergeFoursquareTemplate for use with your own Misty II.
+If you haven't done so already, start by forking, cloning, or downloading this repository to your local machine. Once you have a copy of the template files to work with, read the next section to learn how to set up the `conciergeFoursquareTemplate` for use with your own Misty II.
 
 ### Importing a Dialogflow Agent
 
-Like the base template, the conciergeFoursquareTemplate uses Dialogflow to extract intents and values from user expressions. The `dialogflow` folder in this repository contains a compressed file with several JSON objects that you can import into your Dialogflow agent to create intents and entities that are pre-configured for use with the Foursquare template. Follow these steps to use these files to configure your own agent:
+Like the base template, the `conciergeFoursquareTemplate` uses Dialogflow to extract intents and values from user expressions.
 
-1. Follow the steps from the conciergeBaseTemplate Guide to [create a new Dialogflow agent](./#creating-a-dialogflow-agent).
+The `dialogflow` folder in this repository contains a compressed file with several JSON objects that you can import into your Dialogflow agent to create intents and entities that are pre-configured for use with the Foursquare template. Here's how you can import these files to your own Dialogflow agent:
+
+1. Follow the steps from the `conciergeBaseTemplate` Guide to [create a new Dialogflow agent](./#creating-a-dialogflow-agent).
 2. When the agent is ready, click the **settings** icon next to its name. <br> ![Agent settings](./img/agent-settings.png)
 3. Select **Export and Import** from the top menu on the settings page. <br> ![Import and Export link](./img/create-agent-3.png)
 4. Click **Import from Zip**, and follow the instructions on screen to upload the `concierge.zip` file (located in the `dialogflow` directory of this repository). <br> ![Import modal](./img/create-agent-4.png)
@@ -346,7 +349,7 @@ For example, the `food` entity includes reference values like `burger`, with syn
 
 #### Predefined Intents
 
-Next let's look at the predefined intents. This agent includes the custom intents , `name`, and `dinner`.
+Next let's look at the predefined intents. This agent includes the custom intents `name`, `dinner`, and `aroundMe`.
 
 ![Intents overview](./img/intents-1.png)
 
@@ -392,7 +395,7 @@ Okay! We have the Foursquare keys, and each service is configured to work with t
 
 Before we can use the `conciergeFoursquareTemplate` with our own Dialogflow agent, we must update the `conciergeFoursquareTemplate.js` skill code to use our unique *Project ID*, the *trigger URL* for our cloud function, the Client ID and Client Secret associated with our Foursquare app, and the latitude and longitude for our own location.
 
-Open the `conciergeFoursquareTemplate.js` file from your local copy of this repository in a text editor. You should see the `setCredentials`() function declared near the top of the skill file, as follows:
+Open the `conciergeFoursquareTemplate.js` file from your local copy of this repository in a text editor. You should see the `setCredentials()` function declared near the top of the skill file, as follows:
 
 ```JS
 function setCredentials() 
@@ -419,15 +422,24 @@ Update this function as follows:
 7. **Optional**: Modify the value for `numberOfResults` to change how many recommendations Misty gets from the Places API. 
 8. Save your changes.
 
-### Updating your Skill Code
+### Understanding the Skill Code
 
-The code in the `conciergeFoursquareTemplate.js` skill file is organized into segments similar to the code for the base template:
+The code in the `conciergeFoursquareTemplate.js` skill file is organized into segments similar to the ones we use in the code for the base template:
 
 * Code under the **FOLLOW FACE / LOOK AT PERSON** segment defines the behavior that allows Misty to localize to the person speaking and turn her head to look at the faces she detects.
 * Code under the **CONCIERGE** segment updates our access token, records user expressions, sends recordings to Dialogflow, and handles response data from our Dialogflow agent. In this version of the template, the **CONCIERGE** segment section also includes the code for sending a request to the Foursquare Places API.
-* Code under the **TEXT TO SPEECH** segment defines the functions that use the Google text-to-speech service to have the robot speak her responses out loud.
+* Code under the **TEXT TO SPEECH** segment defines the functions that allow Misty to use Google's text-to-speech service to speak her responses out loud.
 
 As with the base template, the `_dialogueFlowResponse()` callback function handles the response data from Dialogflow to determine Misty's response. In the Foursquare template, this callback function is already configured to extract the parameter values and use them to create a request for the Foursquare Places API. This function should work just fine without any changes, but you can customize the text strings to change how Misty reads back the response.
+
+### Installing the Skill
+
+Follow these steps to install your Foursquare concierge template skill on Misty:
+
+1. Open the [Skill Runner](http://sdk.mistyrobotics.com/skill-runner/) web page and enter Misty’s IP address in the **Robot IP Address** field (located in the upper right hand corner). Click **Connect**.
+2. Make sure **JavaScript** is selected in the **Install** section. Then click **Choose files** and navigate to the directory with the `conciergeFoursquareTemplate.js` and `conciergeFoursquareTemplate.json` files. Select **both files** and click **Open**.
+3. When the upload is complete, the skill appears in the **Manage** section of the Skill Runner page. Find it and click **Start** to begin execution.
+4. When Misty's chest LED turns white, she's ready to talk. Say "Hey Misty" and ask your question after the beep!
 
 ## Remarks
 
