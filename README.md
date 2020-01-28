@@ -123,8 +123,8 @@ We can use the `meal` entity to create an intent can identify specifically which
 
 1. Click the **Create Intent** button to create a new intent.
 2. Call your intent `menu`.
-3. Train your agent with the training phrases shown below: <br> ![menu Intent Training Phrases](./img/menu-intent-training-phrases.png)
-4.  Click **Save.** There is no need to define responses for this intent; we will create our responses for this intent in our skill code.
+3. Train your agent with training phrases like "What's for dinner," "What's for breakfast," "What's for lunch," and "What's on the menu," as shown below: <br> ![menu Intent Training Phrases](./img/menu-intent-training-phrases.png)
+4.  Click **Save.** There is no need to define responses for this intent; we will create our responses in our skill code.
 
 Notice how Dialogflow automatically highlights the words that identify a type of meal (breakfast, lunch, and dinner) in our training phrases. If you click on the highlighted word, you can see that the agent automatically identifies these words as belonging to our custom `meal` entity. Because these words are annotated in our training phrase, the `meal` entity is automatically added to the **Actions and parameters** section. A *parameter* is an element of a user expression that is associated with a specific *entity* and that contains a variable, user-provided *value*.
 
