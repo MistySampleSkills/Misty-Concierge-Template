@@ -103,7 +103,7 @@ Follow these steps to create an intent that can identify questions about Misty's
 4. Define the [*responses*](https://cloud.google.com/dialogflow/docs/intents-responses) associated with this intent. The Dialogflow agent can return the text and a base64-encoded audio string for this response to your skill in a data object when it maps an expression to this intent. For this example, try, "I'm Misty the robot," "My name is Misty," and "Call me Misty the second." <br> ![Name intent responses](./img/name-responses.png)
 5. Click **Save.**
 
-When you click **Save**, Dialogflow trains the agent to recognize this intent. When that's done, you can test the interaction with the sandbox on the right-hand side of the console. Type "What's your name" where it says "Try it now," and see how the agent responds. You should see the text from one of the responses you defined along with the correct label for the intent. ![Try it now](./img/try-it-now.png)
+When you click **Save**, Dialogflow trains the agent to recognize this intent. When that's done, you can test the interaction with the sandbox on the right-hand side of the console. Type "What's your name" where it says "Try it now," and see how the agent responds. You should see the text from one of the responses you defined along with the correct label for the intent.
  
 #### "menu" Intent
 
