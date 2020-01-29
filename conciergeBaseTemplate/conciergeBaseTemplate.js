@@ -374,32 +374,17 @@ function _dialogueFlowResponse(data)
     // You could directly use it too instead of calling Google TTS API
     // misty.SaveAudio("tts.wav", response.outputAudio, true, true);
 
-    if (intent == "name") 
+    if (intent == "YOUR_INTENT_NAME") 
     {
         misty.Set("textToSpeak", response.queryResult.fulfillmentText, false);
         speakTheText();
         // Do Something
     } 
-    else if (intent == "menu") 
+    else if (intent == "YOUR_OTHER_INTENT_NAME") 
     {
-        switch(response.queryResult.parameters.meal) {
-            case "lunch":
-                misty.Set("textToSpeak", "We are serving tuna sandwiches for lunch", false);
-                speakTheText();
-                break;
-            case "dinner":
-                misty.Set("textToSpeak", "We are serving pad thai for dinner", false);
-                speakTheText();
-                break;
-            case "breakfast":
-                misty.Set("textToSpeak", "We are serving omelets for breakfast", false);
-                speakTheText();
-                break;
-            default:
-                misty.Set("textToSpeak", "We are serving omelets for breakfast, tuna sandwiches for lunch, and pad thai for dinner", false);
-                speakTheText();
-                break;
-        }
+        misty.Set("textToSpeak", response.queryResult.fulfillmentText, false);
+        speakTheText();
+        // Do Something
     } 
     else 
     {
