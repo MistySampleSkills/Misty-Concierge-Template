@@ -15,9 +15,13 @@ imitations under the License.
 **********************************************************************/
 
 
-// The skill is not set to start on boot up. To change this add "Startup" to "StartupRules" arrray in the JSON file.
+/*
+NOTE: This skill is NOT set to start on boot up. To change this, add
+"Startup" to the "StartupRules" array in the
+conciergeBaseTemplate.json meta file.
+*/
 
-// ============================= Set Your Credentials Here ================================
+// ======================= Set Your Credentials Here ==================
 
 function setCredentials() 
 {
@@ -27,7 +31,7 @@ function setCredentials()
 }
 setCredentials();
 
-// =========================================================================================
+// ====================================================================
 
 function robotHomePosition() 
 {
@@ -38,7 +42,7 @@ function robotHomePosition()
 }
 robotHomePosition();
 
-// Global variables to keep track of Audio Recording and Audio Playback 
+// Global variables to track audio recording and playback status 
 function initiateAudioStatusTrackingVariable()
 {
     misty.Set("recordingAudio", false, false);
@@ -46,13 +50,14 @@ function initiateAudioStatusTrackingVariable()
 }
 initiateAudioStatusTrackingVariable();
 
-// ===========================================================================================
-// ============================ FOLLOW FACE / LOOK AT PERSON  ================================
-// ===========================================================================================
+// ====================================================================
+// ================= FOLLOW FACE / LOOK AT PERSON  ====================
+// ====================================================================
 
 function initiateFaceFollowVariables() 
 {
-    // State variable to check if Misty is searching for face or is looking at a face
+    // Global variable to check whether Misty is searching for a face
+    // or looking at a face
     misty.Set("findFace", false);
 
     // Global variable to store current pitch and yaw position of the head
@@ -61,8 +66,9 @@ function initiateFaceFollowVariables()
 }
 initiateFaceFollowVariables();
 
-// ========================= Reading Head Yaw and Pitch ======================
+// ====================== Reading Head Yaw and Pitch ==================
 
+// Register listener for head yaw position from ActuatorPosition events
 function registerYaw() 
 {
     misty.AddReturnProperty("headYaw", "SensorId");
@@ -72,6 +78,7 @@ function registerYaw()
 }
 registerYaw();
 
+// Register listener for pitch position from ActuatorPosition events
 function registerPitch() 
 {
     misty.AddReturnProperty("headPitch", "SensorId");
@@ -91,12 +98,15 @@ function _headPitch(data)
     misty.Set("headPitch", data.AdditionalResults[1], false);
 }
 
-// ================================ Calibrate =================================
-// Misty moves the head right left down up and records the max reachable angles.
+// ============================ Calibrate =============================
+// Misty moves her head as far as she can to the right, left, down,
+// and up, and records the maximum reachable angles.
 
-// The calibration is not mandatory everytime. Run this once and look at the debug console 
-// for the pitch and yaw min max range limits. Update the four global variables 
-// listed below with the limits and comment out the call to calibrate funtion 
+// This calibration is NOT mandatory every time. Run this once, and
+// look at the web console in the Skill Runner page to get the min and
+// max range for pitch and yaw movements for your robot. Update the
+// four global variables below with these limits, and comment out the
+// call on the calibrate function:
 // "_ = calibrate();"
 
 function initiateHeadPhysicalLimitVariables() 
@@ -132,7 +142,7 @@ function moveHeadAndRecordPosition(pitch, roll, yaw, outputSetTo, inputFrom) {
 
 _ = calibrate();
 
-// ======================== Face Recognition Data and Face Follow =========================
+// ============== Face Recognition Data and Face Follow ===============
 
 function startFaceRecognition() 
 {
@@ -183,8 +193,8 @@ function _FaceRec(data)
 }
 registerFaceRec();
 
-// ========================== Lost Face / Search Mode =======================
-// Misty looks side to side attempting to find a persons face
+// ========================== Lost Face / Search Mode =================
+// Misty looks from side to side and attempts to find a face
 
 function _findFace() 
 {
@@ -220,8 +230,9 @@ function _armsRandom()
 misty.RegisterTimerEvent("armsRandom", 8000, true);
 
 // ====================== Audio Localization ==========================
-// If Misty is not already looking at the persons face we use audio localization data
-// to make Misty turn and look at the person while speaking out the response
+// If Misty is not already looking at the person's face, we use audio
+// localization data to make Misty turn and look at the person while
+// speaking out the response
 
 function registerAudioLocalisation() 
 {
@@ -233,28 +244,30 @@ registerAudioLocalisation();
 
 function _sound(data) 
 {
-    // We get audio localization data only when an audio is being recorde.
-    // Knowing the state of audio recording we pause Misty from looking side to side
-    // as the user is talking to her.
+    // We must start recording audio to get audio localization data.
+    // While recording audio, we pause Misty looking side to side so
+    // that Misty can accurately localize to the speaker's voice.
     if (!misty.Get("recordingAudio")) misty.Set("recordingAudio", true, false);
 
-    // We get the location of the Audio Speech in 0-360 degrees wrt Local Frame of Head
-    // Using the function toRobotFrame() it is mapped to Robots local frame
+    // We get the location of speech audio in 0-360 degrees w/r/t
+    // Misty's head as the local frame. We use the function
+    // toRobotFrame() to map this location to the robot's local frame.
     var vector = toRobotFrame(data.AdditionalResults[0]);
 
-    // Uncomment next line to see the audio localisation data printed on the console
+    // Uncomment this line to print audio localization data in the
+    // web console for the Skill Runner web page.
     // misty.Debug(vector + " <-- soundIn Angle");
 
     misty.Set("speechSourceAngle", vector, false);
 }
 
-// Converts 0 to 360 range (CCW) into 0 to +-180 to 0 
+// Converts 0 to 360 range (CCW) to 0 to +-180 to 0 
 function toRobotFrame(data) 
 {
     var soundIn = data;
     if (soundIn > 180) soundIn -= 360;
 
-    // Mapping audio localization data to robots frame of reference 
+    // Map audio localization data to robot's frame of reference 
     var actuateTo = misty.Get("headYaw") + (soundIn);
     actuateTo = actuateTo > 90 ? 90 : actuateTo < -90 ? -90 : actuateTo;
 
@@ -262,14 +275,17 @@ function toRobotFrame(data)
 }
 
 
-// ================================================================================================================
-// ================================================ CONCIERGE =====================================================
-// ================================================================================================================
+// ====================================================================
+// ========================== CONCIERGE ===============================
+// ====================================================================
 
 
-// ==================== Update Auth Token =====================
+// ==================== Update Auth Token =============================
 
-// Each token to use the Google Cloud Project expires in about ~45 mins, so we refresh tokens every 15mins (feel free to change refresh rate)
+// Each Google Cloud Access Token expires after ~45 minutes.
+// We use this function to refresh tokens every 15 minutes.
+// Feel free to change the refresh rate as you see fit!
+
 function initiateTokenRefresh() 
 {
     misty.Set("googleAuthToken", "not updated yet", false);
@@ -289,18 +305,20 @@ function _UpdateAuthToken(data)
     misty.Debug("Updated Auth Token");
 }
 
-// ====================== Detect "Hey Misty" =======================
+// ====================== Detect "Hey Misty" ==========================
 
 function initiateVoiceRecordEvent() 
 {
-    // Event "VoiceRecord" returns info on the audio that just finished recordng
+    // VoiceRecord event messages return data about completed voice
+    // recordings. 
     misty.AddReturnProperty("VoiceRecord", "Filename");
     misty.AddReturnProperty("VoiceRecord", "Success");
     misty.AddReturnProperty("VoiceRecord", "ErrorCode");
     misty.AddReturnProperty("VoiceRecord", "ErrorMessage");
     misty.RegisterEvent("VoiceRecord", "VoiceRecord", 10, true);
 
-    // Audio Recording is set to turn on immediately after Misty heads the wake work "Hey Misty"
+    // We start key phrase recognition and set voice recording to begin
+    // immediately after Misty heads the wake word ("Hey, Misty")
     misty.StartKeyPhraseRecognition(true, true, 15000);
     misty.Pause(1000);
     misty.ChangeLED(255, 255, 255);
@@ -314,11 +332,11 @@ function _VoiceRecord(data)
     var errorCode = data.AdditionalResults[2];
     var errorMessage = data.AdditionalResults[3];
 
-    // Audio recording successful
+    // If voice recording is successful, send to Dialogflow
     if (success) 
     {
         misty.Debug("Audio Recording Successful");
-        misty.GetAudioFile(filename, "callDialogueFlow");
+        misty.GetAudioFile(filename, "callDialogflow");
         if (misty.Get("findFace")) misty.MoveHead(-20, 20, null, 95);
         misty.DisplayImage("e_ContentLeft.jpg");
         misty.PlayAudio("s_SystemSuccess.wav", 100);
@@ -335,14 +353,17 @@ function _VoiceRecord(data)
     misty.Set("recordingAudio", false, false);
 }
 
-// ====================== send Audio to DialogueFLow ==========================
+// =============== Send Voice Recording to Dialogflow =================
 
-function callDialogueFlow(data) 
+function callDialogflow(data) 
 {
     misty.Debug("Audio being sent to Dialogue Flow")
     misty.Debug(JSON.stringify(data));
     var base64 = data.Result.Base64;
 
+    // Parameters to send with request to Dialogflow agent.
+    // For more information see the Dialogflow developer documentation:
+    // https://cloud.google.com/dialogflow/docs/reference/rest/v2/projects.agent.sessions/detectIntent
     var arguments = JSON.stringify({
         "queryInput": {
             "audioConfig": {
@@ -365,13 +386,16 @@ function callDialogueFlow(data)
         }
     });
 
-    misty.SendExternalRequest("POST", "https://dialogflow.googleapis.com/v2/projects/" + misty.Get("GoogleCloudProjectID") + "/agent/sessions/123456:detectIntent", "Bearer", misty.Get("googleAuthToken"), arguments, false, false, null, "application/json", "_dialogueFlowResponse");
+    misty.SendExternalRequest("POST", "https://dialogflow.googleapis.com/v2/projects/" + misty.Get("GoogleCloudProjectID") + "/agent/sessions/123456:detectIntent", "Bearer", misty.Get("googleAuthToken"), arguments, false, false, null, "application/json", "_dialogflowResponse");
 }
 
-// ====================== Response from Dialigue Flow ============================
-// We get the extraxted info form the audio and pass it on to Google Translate API 
+// ================= Handle Dialogflow Response =======================
+// We get the extracted data object from the voice recording and define
+// Misty's response to different intents. In some cases, she speaks the
+// response text out loud using Google's text-to-speech API. If the
+// intent is aroundMe, we issue a request to the Foursquare Places API 
 
-function _dialogueFlowResponse(data) 
+function _dialogflowResponse(data) 
 {
 
     let response = JSON.parse(data.Result.ResponseObject.Data);
@@ -386,9 +410,11 @@ function _dialogueFlowResponse(data)
         misty.Debug("Intent not recognized");
     }
 
-    // OPTIONAL 
-    // Dialogue Flow also returns Base64 audio output of the response
-    // You could directly use it too instead of calling Google TTS API
+    // OPTIONAL: 
+    // Dialogflow also returns Base64-encoded audio output of the
+    // response. You can save and play this audio data instead of
+    // calling Google's TTS API. Uncomment this line and use it instead
+    // of the speakTheText() function:
     // misty.SaveAudio("tts.wav", response.outputAudio, true, true);
 
     if (intent == "YOUR_INTENT_NAME") 
@@ -405,12 +431,14 @@ function _dialogueFlowResponse(data)
     } 
     else 
     {
-        // Speaks out any text response from Dialogue Flow (called fulfillmentText) returned by other intents that are not explicitly called above
+        // Speaks out any text response from Dialogflow (from the
+        // fulfillmentText property) returned by other intents not
+        // explicitly named in the conditional blocks above.
         misty.Set("textToSpeak", "I am sorry, could you please try again?", false);
 
         if (intent != "Default Fallback Intent" && intent != "unknown") 
         {
-            // Checks if a text response is returned by Dialogue Flow
+            // Checks if a text response is returned by Dialogflow
             try 
             {
                 let textToSpeak = response.queryResult.fulfillmentText;
@@ -425,15 +453,19 @@ function _dialogueFlowResponse(data)
     }
 }
 
-// ================================================================================
-// ================================ Text To Speach ================================
-// ================================================================================
+// ====================================================================
+// ========================== Text To Speech ==========================
+// ====================================================================
 
-// We store the text to be converted to audio in "textToSpeak" gloobal variable and call speakTheText() function to execute TTS
+// We store the text to be converted to audio in the "textToSpeak"
+// global variable, and call speakTheText() function to execute TTS
 
 function speakTheText() 
 {
-    // Feel free to change the pitch, speaking rate and gender
+    // Parameters to send with request to Google TTS API.
+    // Feel free to change the pitch, speaking rate and gender.
+    // For more information see the Google TTS API developer docs:
+    // https://cloud.google.com/text-to-speech/docs/reference/rest/v1beta1/text/synthesize
     var arguments = JSON.stringify({
         'input': {
             'text': misty.Get("textToSpeak")
@@ -466,7 +498,8 @@ function _Base64In(data)
     misty.Set("playingAudio", true, false);
     misty.DisplayImage("e_Joy2.jpg");
 
-    // If Misty is not already locked on to a human face - we use audio localization data to turn the head and looks at the person 
+    // If Misty is not already locked on to a human face, we use audio
+    // localization data to turn her head in the speaker's direction 
     var angleTolook = misty.Get("speechSourceAngle") >= 0 ? misty.Get("yawLeft") * misty.Get("speechSourceAngle") / 90 : misty.Get("yawRight") * Math.abs(misty.Get("speechSourceAngle")) / 90;
     if (misty.Get("findFace")) 
     {
@@ -481,10 +514,10 @@ function _Base64In(data)
     }
     misty.Pause(500);
 
-    // Saves and plays the Audio
+    // Saves and plays the Base64-encoded audio data 
     misty.SaveAudio("tts.wav", JSON.parse(data.Result.ResponseObject.Data).audioContent, true, true);
 
-    // Re-enabling Misty to listen to wake work "Hey Misty"
+    // Starts Misty listening to the wake word ("Hey, Misty") again
     misty.DisplayImage("e_DefaultContent.jpg", 1.0, 3000);
     misty.StartKeyPhraseRecognition(true, true, 15000);
     misty.ChangeLED(255, 255, 255);
