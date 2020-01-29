@@ -4,8 +4,8 @@
 
 function setCredentials() 
 {
-    misty.Set('cloudFunctionAuthTokenURL', "https://us-central1-concierge-copy-taggaa.cloudfunctions.net/authToken", false);
-    misty.Set("GoogleCloudProjectID", "concierge-copy-taggaa", false);
+    misty.Set('cloudFunctionAuthTokenURL', "YOUR_TRIGGER_URL_TO_GOOGLE_CLOUD_FUNCTION_THAT_PROVIDES_ACCESS_TOKEN", false);
+    misty.Set("GoogleCloudProjectID", "YOUR_GOOGLE_CLOUD_PROJECT_ID", false);
     misty.Set("langCodeForTTS", "en-US", false);
 }
 setCredentials();
