@@ -48,7 +48,7 @@ This guide provides all of the information you need to start using the concierge
 
 ## Overview
 
-The Misty-Concierge-Template repository includes the following resources:
+The **JavaScript** folder in the Misty-Concierge-Template repository includes the following resources:
 
 * **conciergeBaseTemplate** - A basic template for the concierge use case.  The `conciergeBaseTemplate.js` code file provides the framework for sending audio files to Dialogflow and handling the Dialogflow response data. Use this template to start building custom voice interactions for your Misty II robot.
 * **conciergeFoursquareTemplate** - An extension of the base template that shows how Misty can suggest nearby food, places, and services by using Dialogflow response data to make a request to the Foursquare Places API. Use this template as an example of how to use third-party services with your concierge skills.
