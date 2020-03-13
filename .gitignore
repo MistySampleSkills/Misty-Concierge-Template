@@ -1,1 +1,4 @@
 .DS_Store
+/C#/Misty.Services/Misty.Services/obj/Debug
+/C#/Misty.Skill.Concierge/.vs/Misty.Skill.Concierge/v15/Server/sqlite3
+/C#/Misty.Skill.Concierge/Misty.Skill.Concierge/obj/x86/Debug
