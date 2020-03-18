@@ -7,7 +7,7 @@ The **Misty Concierge Template** is an open-source project with skill templates 
 This repository provides templates for building a concierge skill using Misty's JavaScript and .NET (Beta) SDKs. It includes the following subdirectories:
 
 * [**JavaScript**](./JavaScript) - The original JavaScript implementation of the Misty Concierge Template, built with Misty's JavaScript SDK. Use the README in this directory to get started with the JavaScript version of the template.
-* [**C#**](./C#) - A C# implementation of the Misty Concierge Template, built with Misty's .NET SDK (Beta). Use the README in this directory to get started with a C# version of the template.
+* [**C#**](./C%23) - A C# implementation of the Misty Concierge Template, built with Misty's .NET SDK (Beta). Use the README in this directory to get started with a C# version of the template.
 * **img** - Images and screenshots used in the documentation for this repository.
 
 The skills you build with these templates focus on *information sharing*. Each template integrates with Dialogflow and other third-party APIs to give Misty the ability to handle voice interactions, answer questions, and look up information. As she listens and responds, Misty maintains eye contact with the speaker, moves her head and arms, blinks her LED, plays sounds, and changes her expression to invite engagement and delight those who speak to her. All of this interaction is built into the template for you to customize and build on for your own use case. 
