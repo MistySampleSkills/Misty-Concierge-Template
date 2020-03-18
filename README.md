@@ -1,6 +1,6 @@
 # Misty-Concierge-Template
 
-The **Misty Concierge Template** is an open-source project with skill templates for Misty II robots. As a Misty developer, you can use the code and documentation in this repository to quickly build and deploy skills that put Misty to work as a concierge in industries like hospitality, healthcare, education, eldercare, commercial real estate, retail, marketing, and even museums.
+The **Misty-Concierge-Template** repository is an open-source collection of concierge skill templates for Misty II robots. As a Misty developer, you can use the code and documentation in this repository to quickly build and deploy skills that put Misty to work as a concierge in industries like hospitality, healthcare, education, eldercare, commercial real estate, retail, marketing, and even museums.
 
 ## Repository Contents
 
