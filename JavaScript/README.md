@@ -1,5 +1,7 @@
 # JavaScript Templates
 
+*Last tested on `robotVersion 1.16.1.10505`*
+
 The **Misty Concierge JavaScript Templates** are open-source JavaScript skill templates for Misty II robots. As a Misty developer, you can use this code and documentation to quickly build and deploy skills that put Misty to work as a concierge in industries like hospitality, healthcare, education, eldercare, commercial real estate, retail, marketing, and even museums.
 
 The templates in this directory focus on *information sharing*. They integrate with Dialogflow to give Misty the ability to handle voice interactions, answer questions, and look up information. As she listens and responds, Misty maintains eye contact with the speaker, moves her head and arms, blinks her LED, plays sounds, and changes her expression to invite engagement and delight those who speak to her.
